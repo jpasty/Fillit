@@ -17,18 +17,18 @@
 void		create_last(t_etris **current)
 {
 	t_etris *new_elem;
-	int		n;
+	int n;
 
 	n = -1;
-	new_elem = (t_etris *)malloc(sizeof(t_etris));
-	while (n++ < 3)
+	if (*current)
 	{
-		new_elem->point[n].x = 0;
-		new_elem->point[n].y = 0;
+		new_elem = (t_etris *)malloc(sizeof(t_etris));
+		(*current)->next = new_elem;
+		*current = new_elem;
+		return;
 	}
-	new_elem->next = NULL;
-	(*current)->next = new_elem;
-	*current = new_elem;
+	*current = (t_etris *)malloc(sizeof(t_etris));
+	(*current)->next = NULL;
 }
 char		*start_position(char *str)
 {
@@ -74,6 +74,7 @@ void			make_termino_list(t_etris **curr, char *str)
 	i = 0;
 	n = 0;
 	ptr = start_position(str);
+	create_last(curr);
 	while (ptr[i])
 	{
 		if (ptr[i] == BLOCK)
@@ -85,11 +86,11 @@ void			make_termino_list(t_etris **curr, char *str)
 		}
 		i++;
 	}
-	n  = 0;
+//	n  = 0;
 //	while (n != 4)
 //	{
 //		printf("x = %d, y = %d;\n", (*curr)->point[n].x, (*curr)->point[n].y);
 //		n++;
 //	}
-	create_last(curr);
+
 }

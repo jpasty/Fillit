@@ -206,17 +206,23 @@ int			valid_or_not(int fd)
 	int		i;
 
 	i = 0;
+//    if (!head)
+//    	curr = head;
+
 //    if (!( head = initialize() ))
-//    	return (0);
+//		return (0);
     curr = head;
     if (fd == -1)
         ft_putstr("Can't open file\n");
     retprev = 0;
     while ((ret = read(fd, buf, BYTEREAD)) >= 20)  //
     {
+    	buf[ret] = '\0';
         if (check_input(buf, ret) != 0)
         	return (0);
         make_termino_list(&curr, buf);
+        if (!head)
+        	head = curr;
         printf("%s", buf);
         retprev = ret;
     }
