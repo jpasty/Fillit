@@ -27,6 +27,7 @@ void		create_last(t_etris **current)
 		new_elem->point[n].y = 0;
 	}
 	new_elem->next = NULL;
+	(*current)->next = new_elem;
 	*current = new_elem;
 }
 char		*start_position(char *str)
@@ -85,10 +86,10 @@ void			make_termino_list(t_etris **curr, char *str)
 		i++;
 	}
 	n  = 0;
-	while (n != 4)
-	{
-		printf("x = %d, y = %d;\n", (*curr)->point[n].x, (*curr)->point[n].y);
-		n++;
-	}
+//	while (n != 4)
+//	{
+//		printf("x = %d, y = %d;\n", (*curr)->point[n].x, (*curr)->point[n].y);
+//		n++;
+//	}
 	create_last(curr);
 }

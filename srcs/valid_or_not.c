@@ -96,33 +96,57 @@
 //
 //}
 
-t_map       *initialize()
-{
-    t_map   *new;
+//t_etris		*making_position(char *str)
+//{
+//    int		i;
+//    char *start;
+//    t_pos	pos;
+//
+//
+//    i = 0;
+//    x_min = 0;
+//    y_min  = 0;
+//    while (str[i])
+//    {
+//		while (str[i++] != '\n')
+//		{
+//			if (str[i] == BLOCK && y_min == 0)
+//				y_min = i / 5;
+//		}
+//		i++;
+//		while (str[i++] != '\n')
+//		{
+//			if (str[i] == BLOCK && x_min == 0)
+//				x_min = i % 5;
+//		}
+//		start = &str[y_min + x_min];
+//	}
+//
+//
+//}
 
-    if (!(new = (t_map *)malloc(sizeof(t_map))))
+t_etris       *initialize(void)
+{
+    t_etris   *head;
+
+    if (!(head = (t_etris *)malloc(sizeof(t_etris))))
         return (NULL);
-    if (!(new->line = (char *)malloc(sizeof(char) * BYTEREAD)))
-    {
-        free(new);
-        return (NULL);
-    }
-    new->nbr_of_block = 1;
-    return (new);
+    head->next = NULL;
+    return (head);
 }
 
-char    **make_map(char *str)
-{
-    char **map;
-
-    if (!(map = (char **)malloc(sizeof(char *) * 4)))
-        return (NULL);
-
-}
+//char    **make_map(char *str)
+//{
+//    char **map;
+//
+//    if (!(map = (char **)malloc(sizeof(char *) * 4)))
+//        return (NULL);
+//
+//}
 
 int         check_block(char *str)
 {
-    int i;
+    int     i;
 
     i = 0;
     while (*str)
@@ -174,28 +198,43 @@ int         check_input(char *str, int ret)
 }
 int			valid_or_not(int fd)
 {
-    int ret;
-    int retprev;
+    int		ret;
+    int		retprev;
+	char	buf[21];
+    t_etris	*head;
+    t_etris	*curr;
+	int		i;
 
+	i = 0;
+//    if (!( head = initialize() ))
+//    	return (0);
+    curr = head;
     if (fd == -1)
         ft_putstr("Can't open file\n");
-    t_map *buf;
-    buf = initialize();
     retprev = 0;
-    while ((ret = read(fd, buf->line, BYTEREAD)) >= 20)  //
+    while ((ret = read(fd, buf, BYTEREAD)) >= 20)  //
     {
-        if (check_input(buf->line, ret) != 0)
-            return (0);
-        printf("%s", buf->line);
-        buf->nbr_of_block++;
+        if (check_input(buf, ret) != 0)
+        	return (0);
+        make_termino_list(&curr, buf);
+        printf("%s", buf);
         retprev = ret;
     }
-   if (retprev != 20)
-   {
-       return (0);
-   }
-   printf("success validation\n");
-   return (1);
+    while (head)
+	{
+    	i = 0;
+    	while (i != 4)
+    	{
+    		printf("x = %d, y = %d;\n", head->point[i].x, head->point[i].y);
+    		i++;
+    	}
+    	printf("-------------\n");
+    	head = head->next;
+	}
+    if (retprev != 20)
+    	return (0);
+    printf("success validation\n");
+    return (1);
 //    char buf[BYTEREAD + 1];
 //    char *map;
 //    int string;
