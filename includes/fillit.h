@@ -22,8 +22,6 @@
 # define BLOCK '#'
 # define SPACE '.'
 
-int     valid_or_not(int fd);
-
 typedef struct	    s_map
 {
 	char		    *line;
@@ -31,12 +29,21 @@ typedef struct	    s_map
 
 }				    t_map;
 
-typedef struct	s_mino
+typedef struct      s_pos
 {
-	char		let;
-	int			*loc;
-}				t_mino;
+    int             x;
+    int             y;
+}                   t_pos;
 
-void			fillopen(int fd, char **mino);
+typedef struct		s_etris
+{
+    t_pos	 		point[4];
+	struct s_etris	*next;
+}					t_etris;
+
+void				fillopen(int , char **);
+int     			valid_or_not(int);
+t_etris				*initialize(void);
+void				make_termino_list(t_etris **, char *);
 
 #endif
