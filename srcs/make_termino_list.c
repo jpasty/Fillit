@@ -86,11 +86,4 @@ void			make_termino_list(t_etris **curr, char *str)
 		}
 		i++;
 	}
-//	n  = 0;
-//	while (n != 4)
-//	{
-//		printf("x = %d, y = %d;\n", (*curr)->point[n].x, (*curr)->point[n].y);
-//		n++;
-//	}
-
 }
