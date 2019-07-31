@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   position_test.c                                    :+:      :+:    :+:   */
+/*   make_termino_list.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpasty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,15 +11,14 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include "fillit.h"
 
+
+/* Создает и помещает ноду в конец свяханного списка */
 void		create_last(t_etris **current)
 {
 	t_etris *new_elem;
-	int n;
 
-	n = -1;
 	if (*current)
 	{
 		new_elem = (t_etris *)malloc(sizeof(t_etris));
@@ -30,6 +29,9 @@ void		create_last(t_etris **current)
 	*current = (t_etris *)malloc(sizeof(t_etris));
 	(*current)->next = NULL;
 }
+
+/* Поиск точки начала координат. Возвращает указатель на точку отсчета */
+
 char		*start_position(char *str)
 {
     int		i;
@@ -40,30 +42,28 @@ char		*start_position(char *str)
 
     i = 0;
     y = 0;
-    x_min = 0;
     while (str[i])
     {
 		while (str[i] != '\n' && (str[i] == BLOCK || str[i] == SPACE))
 		{
-			if (str[i] == BLOCK && y == 0 && x_min == 0)
+			if (str[i] == BLOCK && y == 0)
 			{
 				y_min = i / 5;
 				x_min = i % 5;
-				x = x_min;
 				y = -1;
 			}
 			if (str[i] == BLOCK)
-			{
 				x = i % 5;
-				if (x < x_min)
-					x_min = x;
-			}
+			if (x < x_min)
+				x_min = x;
 			i++;
 		}
 		i++;
     }
 	return (&str[y_min*5 + x_min]);
 }
+
+/* Функция добавляет новый элемент списка, сохраняет координаты блока */
 
 void			make_termino_list(t_etris **curr, char *str)
 {
@@ -82,7 +82,6 @@ void			make_termino_list(t_etris **curr, char *str)
 			(*curr)->point[n].x = i % 5;
 			(*curr)->point[n].y = i / 5;
 			n++;
-
 		}
 		i++;
 	}
