@@ -6,14 +6,14 @@
 /*   By: jpasty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/19 12:37:30 by jpasty            #+#    #+#             */
-/*   Updated: 2019/06/19 18:20:22 by jpasty           ###   ########.fr       */
+/*   Updated: 2019/08/05 19:08:34 by jpasty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 #include <stdio.h>
 
-/* Проверка тетремино по количеству связей между элемнтами */
+/* Проверка тетремино по количеству связей между элемнтами. */
 
 int         check_block(char *str)
 {
@@ -41,12 +41,13 @@ int         check_block(char *str)
 }
 
 /* Проверка на валидность блока (корректность символов, кол-во '#', размер блока,
- * кол-во переносов, расположение переносов)  */
+ * кол-во переносов, расположение переносов).  */
 
 int         check_input(char *str, int ret)
 {
     int     i;
     int     block;
+
     i = 0;
     block = 0;
 
@@ -54,7 +55,7 @@ int         check_input(char *str, int ret)
     {
         if (i % 5 < 4)
         {
-            if (!(str[i] == BLOCK || str[i] == SPACE))
+            if (!(str[i] == BLOCK || str[i] == DOT))
                 return (1);
             if (str[i] == BLOCK && ++block > 4)
                 return (2);
@@ -73,43 +74,32 @@ int         check_input(char *str, int ret)
 /* Функция считывает по 21 байт, отправляет на валидацию и затем создает связанный список
  * из отдельных блоков. Возвращает указатель на первый элемент списка.*/
 
-t_etris			*valid_or_not(int fd)
+t_etris		*valid_or_not(int fd, t_etris *head)
 {
     int		ret;
     int		retprev;
-	char	buf[21];
-    t_etris	*head;
+	char	buf[20];
     t_etris	*curr;
-	int i = 0;
+    int		count;
 
-	head = NULL;
+	if (fd == -1)
+		ft_putstr("Can't open file\n");
+	count = 1;
     curr = head;
-    if (fd == -1)
-        ft_putstr("Can't open file\n");
     retprev = 0;
+    ft_bzero(buf, 21);
     while ((ret = read(fd, buf, BYTEREAD)) >= 20)
     {
-    	buf[ret] = '\0';
+    	if (count++ > 26)
+			return (NULL);
         if (check_input(buf, ret) != 0)
-        	return (0);
-        make_termino_list(&curr, buf);
-        if (!head)
-        	head = curr;
-        printf("%s", buf);
+        	return (NULL);
+		make_termino_list(&curr, buf);
+		if (!head)
+			head = curr;
         retprev = ret;
     }
-	while (head)
-	{
-		i = 0;
-		while (i != 4)
-		{
-			printf("x = %d, y = %d;\n", head->point[i].x, head->point[i].y);
-			i++;
-		}
-		printf("-------------\n");
-		head = head->next;
-	}
     if (retprev != 20)
-    	return (0);
+    	return (NULL);
     return (head);
 }

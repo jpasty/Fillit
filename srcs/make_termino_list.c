@@ -14,23 +14,23 @@
 #include "fillit.h"
 
 
-/* Создает и помещает ноду в конец свяханного списка */
+/* Создает и помещает ноду в конец связанного списка. */
 void		create_last(t_etris **current)
 {
 	t_etris *new_elem;
 
 	if (*current)
 	{
-		new_elem = (t_etris *)malloc(sizeof(t_etris));
+		new_elem = (t_etris *)ft_memalloc(sizeof(t_etris));
 		(*current)->next = new_elem;
 		*current = new_elem;
 		return;
 	}
-	*current = (t_etris *)malloc(sizeof(t_etris));
+	*current = (t_etris *)ft_memalloc(sizeof(t_etris));
 	(*current)->next = NULL;
 }
 
-/* Поиск точки начала координат. Возвращает указатель на точку отсчета */
+/* Поиск точки начала координат. Возвращает указатель на точку отсчета. */
 
 char		*start_position(char *str)
 {
@@ -44,13 +44,12 @@ char		*start_position(char *str)
     y = 0;
     while (str[i])
     {
-		while (str[i] != '\n' && (str[i] == BLOCK || str[i] == SPACE))
+		while (str[i] != '\n' && (str[i] == BLOCK || str[i] == DOT))
 		{
-			if (str[i] == BLOCK && y == 0)
+			if (str[i] == BLOCK && y-- == 0)
 			{
 				y_min = i / 5;
 				x_min = i % 5;
-				y = -1;
 			}
 			if (str[i] == BLOCK)
 				x = i % 5;
@@ -63,7 +62,7 @@ char		*start_position(char *str)
 	return (&str[y_min*5 + x_min]);
 }
 
-/* Функция добавляет новый элемент списка, сохраняет координаты блока */
+/* Функция добавляет новый элемент списка, сохраняет координаты блока. */
 
 void			make_termino_list(t_etris **curr, char *str)
 {
