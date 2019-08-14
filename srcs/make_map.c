@@ -6,7 +6,7 @@
 /*   By: jpasty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/14 13:31:47 by jpasty            #+#    #+#             */
-/*   Updated: 2019/08/14 13:31:49 by jpasty           ###   ########.fr       */
+/*   Updated: 2019/08/14 14:54:49 by jpasty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void		print_map(char **map)
 		ft_putstr(map[j++]);
 		ft_putchar('\n');
 	}
+	free(map);
+	map = NULL;
 }
 
 int			min_board_side(t_etris *figure)

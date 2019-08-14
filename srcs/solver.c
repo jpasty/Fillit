@@ -3,92 +3,101 @@
 /*                                                        :::      ::::::::   */
 /*   solver.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jpasty <jpasty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jpasty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/02 19:31:02 by jpasty            #+#    #+#             */
-/*   Updated: 2019/08/05 21:24:45 by jpasty           ###   ########.fr       */
+/*   Created: 2019/08/14 14:37:34 by jpasty            #+#    #+#             */
+/*   Updated: 2019/08/14 14:42:34 by jpasty           ###   ########.fr       */
 /*                                                                            */
-/* *********************************************************************/
+/* ************************************************************************** */
 
 #include "fillit.h"
 
-static void	razpihni(char **map, t_etris *figure, int i, int j)
+static void	razpihni(char **map, t_etris *figure, int *x_y)
 {
 	int		n;
 
 	n = 0;
-	while (n++ < 4)
-		map[i + figure->point[n].y][j + figure->point[n].x] = DOT;
-}
-
-static void	vzapihni(char **map, t_etris *figure, int i, int j, char c)
-
-{
-	int		n;
-
-	n = 0;
-	while ( n < 4)
+	while (n <= 3)
 	{
-		map[i + figure->point[n].y][j + figure->point[n].x] = c;
+		map[x_y[1] + figure->pos[n].y][x_y[0] + figure->pos[n].x] = DOT;
 		n++;
 	}
 }
 
-int		check_paste(char **map, t_etris *figure, char c)
+static void	vzapihni(char **map, t_etris *figure, int *x_y, int c)
 {
-	int		i;
-	int		j;
 	int		n;
 
-	j = 0;
-	while (map[j])
+	n = 0;
+	while (n < 4)
 	{
-		i = 0;
-		while (map[j][i])
+		map[x_y[1] + figure->pos[n].y][x_y[0] + figure->pos[n].x] = c;
+		n++;
+	}
+}
+
+static int	in_area(char **m, t_etris *f, int *x_y, int n)
+{
+	int		size;
+
+	size = ft_strlen(*m) - 1;
+	if ((x_y[1] + f->pos[n].y) > size || (x_y[0] + f->pos[n].x) > size)
+		return (0);
+	return (1);
+}
+
+int			check_paste(char **m, t_etris *f, int *x_y, char c)
+{
+	int		n;
+
+	while (m[x_y[1]])
+	{
+		while (m[x_y[1]][x_y[0]])
 		{
 			n = 0;
 			while (n < 4)
 			{
-				if (map[j + figure->point[n].y][i + figure->point[n].x] != DOT)
-					break;
+				if (!in_area(m, f, x_y, n) ||
+					m[x_y[1] + f->pos[n].y][x_y[0] + f->pos[n].x] != DOT)
+					break ;
 				n++;
 			}
 			if (n == 4)
 			{
-				vzapihni(map, figure, i, j, c);
+				vzapihni(m, f, x_y, c);
 				return (1);
 			}
-			i++;
+			(x_y[0])++;
 		}
-		j++;
+		(x_y[1])++;
+		x_y[0] = 0;
 	}
 	return (0);
 }
 
-int	 		just_do_it(char **map, t_etris *figure, char c)
+int			just_do_it(char **map, t_etris *figure, char c)
 {
-	int		x;
-	int		y;
+	int		x_y[2];
 
+	x_y[1] = 0;
 	if (!figure)
 		return (1);
-	y = 0;
-	while (map[y])
+	while (map[x_y[1]])
 	{
-		x = 0;
-		while (map[y][x])
+		x_y[0] = 0;
+		while (map[x_y[1]][x_y[0]])
 		{
-			if (check_paste(map, figure, c))
+			if (check_paste(map, figure, x_y, c))
 			{
 				if (just_do_it(map, figure->next, c + 1))
 					return (1);
 			}
 			else
 				return (0);
-			razpihni(map, figure, y, x);
-			x++;
+			razpihni(map, figure, x_y);
+			(x_y[0])++;
 		}
-		y++;
+		(x_y[1])++;
 	}
-	return (1);
+	return (0);
 }
