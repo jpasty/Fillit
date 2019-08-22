@@ -12,31 +12,33 @@
 
 #include "fillit.h"
 
-void		create_last(t_etris **current)
+static int	create_last(t_etris **current)
 {
 	t_etris	*new_elem;
 
 	if (*current)
 	{
-		new_elem = (t_etris *)ft_memalloc(sizeof(t_etris));
+		if (!(new_elem = (t_etris *)ft_memalloc(sizeof(t_etris))))
+			return (0);
 		(*current)->next = new_elem;
 		*current = new_elem;
-		return ;
+		return (1);
 	}
-	*current = (t_etris *)ft_memalloc(sizeof(t_etris));
+	if (!(*current = (t_etris *)ft_memalloc(sizeof(t_etris))))
+		return (0);
 	(*current)->next = NULL;
+	return (1);
 }
 
-char		*start_position(char *str)
+static char	*start_position(char *str, int x_min, int y_min)
 {
 	int		i;
 	int		x;
 	int		y;
-	int		x_min;
-	int		y_min;
 
 	i = 0;
 	y = 0;
+	x = 0;
 	while (str[i])
 	{
 		if (str[i] != '\n' && (str[i] == BLOCK || str[i] == DOT))
@@ -56,7 +58,7 @@ char		*start_position(char *str)
 	return (&str[y_min * 5 + x_min]);
 }
 
-void		make_tetrimino_list(t_etris **curr, char *str)
+int			make_tetrimino_list(t_etris **curr, char *str)
 {
 	int		i;
 	int		n;
@@ -64,8 +66,9 @@ void		make_tetrimino_list(t_etris **curr, char *str)
 
 	i = 0;
 	n = 0;
-	ptr = start_position(str);
-	create_last(curr);
+	ptr = start_position(str, 0, 0);
+	if (!create_last(curr))
+		return (0);
 	while (ptr[i])
 	{
 		if (ptr[i] == BLOCK)
@@ -76,4 +79,5 @@ void		make_tetrimino_list(t_etris **curr, char *str)
 		}
 		i++;
 	}
+	return (1);
 }

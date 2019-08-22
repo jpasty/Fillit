@@ -6,24 +6,29 @@
 /*   By: jpasty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/14 13:31:47 by jpasty            #+#    #+#             */
-/*   Updated: 2019/08/14 14:54:49 by jpasty           ###   ########.fr       */
+/*   Updated: 2019/08/22 18:43:58 by jpasty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-void		print_map(char **map)
+void		print_map(char **map, t_etris *figure, int fd)
 {
 	int		j;
 
 	j = 0;
-	while (map[j])
+	if (map)
 	{
-		ft_putstr(map[j++]);
-		ft_putchar('\n');
+		while (map[j])
+		{
+			ft_putstr(map[j++]);
+			ft_putchar('\n');
+		}
 	}
-	free(map);
-	map = NULL;
+	else
+		delete_and_exit(figure, fd);
+	ft_free(map);
+	delete_list(figure);
 }
 
 int			min_board_side(t_etris *figure)
@@ -56,8 +61,11 @@ char		**gen_map(char **map, int side)
 	while (j < side)
 	{
 		i = 0;
-		if (!(map[j] = (char*)ft_memalloc(sizeof(char) * (side + 1))))
+		if (!(map[j] = (char *)ft_memalloc(sizeof(char) * (side + 1))))
+		{
+			ft_free(map);
 			return (NULL);
+		}
 		while (i < side)
 			map[j][i++] = DOT;
 		j++;
